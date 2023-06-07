@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import "./db/mongoose";
 import User from "./models/User";
+import Task from "./models/Task";
 
 const app: express.Express = express();
 const port: number = parseInt(process.env.PORT as any) || 3000;
@@ -25,6 +26,74 @@ app.post("/users", async (req, res) => {
     console.log(error);
     res.status(400);
     res.send(error);
+  }
+});
+
+app.get("/users", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res
+      .setHeader("Content-Type", "application/json")
+      .status(200)
+      .end(JSON.stringify(users));
+  } catch (error) {
+    console.log(error);
+    res.setHeader("Content-Type", "application/json").status(500).end(error);
+  }
+});
+
+app.get("/users/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).exec();
+    if (!user)
+      res
+        .status(404)
+        .setHeader("Content-Type", "application/json")
+        .end(JSON.stringify({ message: "not found by id" }));
+    else
+      res
+        .status(200)
+        .setHeader("Content-Tpye", "application/json")
+        .end(JSON.stringify(user));
+  } catch (error: any) {
+    console.log(error);
+    if (error.name === "CastError")
+      res
+        .status(500)
+        .setHeader("Content-Type", "application/json")
+        .end(JSON.stringify({ message: "ID length mismatch." }));
+    else
+      res.status(500).setHeader("Content-Type", "application/json").end(error);
+  }
+});
+
+app.get("/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find({});
+    res
+      .status(200)
+      .setHeader("Content-Type", "application/json")
+      .end(JSON.stringify(tasks));
+  } catch (error) {
+    console.log(error);
+    res.setHeader("Content-Type", "application/json").status(500).end(error);
+  }
+});
+
+app.post("/tasks", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  try {
+    const newTask = new Task({
+      description: req.body.description,
+      completed: req.body.completed,
+    });
+    await newTask.save();
+    res.status(201);
+    res.end(JSON.stringify({ message: "success" }));
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+    res.end(error);
   }
 });
 

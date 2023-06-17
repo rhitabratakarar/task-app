@@ -67,6 +67,19 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
+app.delete('/users/:id', async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res
+      .status(200)
+      .end(JSON.stringify({message: 'success'}));
+  } catch(error) {
+    res
+      .status(404)
+      .end(JSON.stringify(error))
+  }
+});
+
 app.get("/tasks", async (req, res) => {
   try {
     const tasks = await Task.find({});

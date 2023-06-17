@@ -80,6 +80,21 @@ app.get("/tasks", async (req, res) => {
   }
 });
 
+app.get('/tasks/:id', async (req, res) => {
+  try {
+    const particularTask: object | null = await Task.findById(req.params.id);
+    res
+      .status(200)
+      .setHeader('Content-Type', 'application/json')
+      .end(JSON.stringify(particularTask));
+  } catch (error) {
+    res
+      .status(400)
+      .setHeader('Content-Type', 'application/json')
+      .end(JSON.stringify(error));
+  }
+});
+
 app.post("/tasks", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   try {

@@ -125,6 +125,19 @@ app.post("/tasks", async (req, res) => {
   }
 });
 
+app.delete('/tasks/:id', async (req, res) => {
+  try {
+    await Task.findByIdAndDelete(req.params.id);
+    res
+      .status(200)
+      .end(JSON.stringify({message: 'success'}))
+  } catch(error) {
+    res
+      .status(404)
+      .end(JSON.stringify(error));
+  }
+})
+
 app.listen(port, () => {
   console.log("server is up! PORT: ", port);
 });

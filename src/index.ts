@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import "./db/mongoose";
 import userRouter from "./routers/user";
-import taskRouter from './routers/task';
+import taskRouter from "./routers/task";
 
 const app: express.Express = express();
 const port: number = parseInt(process.env.PORT as any) || 3000;

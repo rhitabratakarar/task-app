@@ -1,6 +1,4 @@
 import { connect } from "mongoose";
-import 'dotenv/config';
+import "dotenv/config";
 
-connect(
-  `${process.env.CONN}${process.env.DB_NAME}`
-);
+connect(`${process.env.CONN}${process.env.DB_NAME}`);

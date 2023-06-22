@@ -58,38 +58,18 @@ taskRouter.delete("/tasks/:id", async (req, res) => {
   }
 });
 
-taskRouter.put("/tasks/:id", async (req, res) => {
-  try {
-    Task.findByIdAndUpdate(req.params.id);
-  } catch (error) {
-    res
-      .status(404)
-      .setHeader("Content-Type", "application/json")
-      .end(JSON.stringify({ error }));
-  }
-});
-
 taskRouter.patch("/tasks/:id", async (req, res) => {
-  // get the request params from id
-  const idToUpdate = req.params.id;
-
-  // get the body of the updating fields
-  const bodyToUpdate = req.body;
-
-  // send a request to mongodb atlas to update the field using Mongoose model
   try {
-    await Task.findByIdAndUpdate(idToUpdate, bodyToUpdate, {
-      new: true,
-      runValidator: true,
-    });
+    const foundedTask = await Task.findById(req.params.id);
+    foundedTask!.completed = req.body.completed;
+    foundedTask!.description = req.body.description;
+    foundedTask!.save();
   } catch (error) {
     return res
       .status(400)
       .setHeader("content-type", "application/json")
       .end(error);
   }
-
-  // await for the responses and update the user with proper message
   res
     .status(200)
     .setHeader("content-type", "application/json")

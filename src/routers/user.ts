@@ -70,10 +70,12 @@ userRouter.delete("/users/:id", async (req, res) => {
 
 userRouter.patch("/users/:id", async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidator: true,
-    });
+    // ! is the not null assertion operator
+    const user = await User.findById(req.params.id);
+    user!.name = req.body.name;
+    user!.password = req.body.password;
+    user!.email = req.body.email;
+    await user!.save();
 
     if (!user) {
       res

@@ -14,8 +14,6 @@ app.get("/", async (req, res) => {
   res.end("welcome welcome!");
 });
 
-// -------------------------------------------------------------------------
-
 app.listen(port, () => {
   console.log("server is up! PORT: ", port);
 });
